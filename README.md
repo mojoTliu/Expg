@@ -3,5 +3,5 @@ Expg: Express generator bootstrap.
 
 ## Installation
 ```sh
-$ npm install -g exp-generator
+$ npm install -g expg
 ```
