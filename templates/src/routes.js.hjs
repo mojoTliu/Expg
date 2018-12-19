@@ -1,0 +1,25 @@
+// const indexRouter = require('./routes/index');
+
+module.exports = (app) => {
+
+  // app.use('/', indexRouter);
+
+  // error handler
+  app.use(function (err, req, res, next) {
+    // res.locals.message = err.message;
+    // res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500)
+      .json({
+        success: false,
+        message: err.message
+      });
+  });
+
+  app.all('*', (req, res) => {
+    res.json({
+      service: 'This is {{appName}}.'
+    });
+  });
+};

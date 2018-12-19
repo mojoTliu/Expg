@@ -1,0 +1,67 @@
+const _ = require('lodash');
+const dayjs = require('dayjs');
+const winston = require('winston');
+{{#if persistent}}
+const DailyRotateFile = require('winston-daily-rotate-file');
+{{/if}}
+
+const custormFormat = winston.format.printf(info => `[${info.timestamp}]: ${info.level} - ${info.message}`);
+const custormTimestamp = winston.format((info, opts) => {
+  _.assign(info, { timestamp: dayjs().format('YYYY-MM-DD HH:mm:sss') });
+  return info;
+});
+
+const logger = winston.createLogger({
+  level: 'info',
+  exitOnError: false,
+  format: winston.format.combine(custormTimestamp(), custormFormat),
+  transports: [
+    {{#if persistent}}
+    new DailyRotateFile({
+      json: false,
+      prepend: true,
+      maxSize: '30m',
+      dirname: 'logs',
+      filename: 'info_%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+    }),
+    new DailyRotateFile({
+      level: 'error',
+      prepend: true,
+      maxSize: '30m',
+      dirname: 'logs',
+      filename: 'error_%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+    }),
+    {{/if}}
+  ],
+  {{#if persistent}}
+  // log uncaught Exception
+  exceptionHandlers: [
+    new DailyRotateFile({
+      json: false,
+      prepend: true,
+      maxSize: '30m',
+      dirname: 'logs',
+      filename: 'exceptions_%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+    }),
+  ],
+  {{/if}}
+});
+
+{{#if persistent}}
+logger.stream = {
+  write: (message, encoding) => {
+    logger.info(message);
+  }
+};
+{{/if}}
+
+if (process.env.ENVIRONMENT === 'development') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.combine(custormTimestamp(), custormFormat),
+  }));
+}
+
+module.exports = logger;

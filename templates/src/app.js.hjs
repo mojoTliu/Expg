@@ -1,0 +1,21 @@
+const cors = require('cors');
+const morgan = require('morgan');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+{{#if persistent}}
+const logger = require('./utils/logger');
+{{/if}}
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+{{#if persistent}}
+app.use(morgan('combined', { stream: logger.stream }));
+{{else}}
+app.use(morgan('combined'));
+{{/if}}
+
+
+module.exports = app;

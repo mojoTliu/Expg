@@ -1,0 +1,22 @@
+{
+  "name": "expg",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Mojo Liu",
+  "email": "mojoliu@outlook.com",
+  "description": "A Node.js server generation bootstrap",
+  "keywords": [
+    "express",
+    "generator",
+    "bootstrap"
+  ],
+  "bin": {
+    "expg": "./bin/expg.js"
+  },
+  "dependencies": {
+    "commander": "^2.19.0",
+    "handlebars": "^4.0.12",
+    "inquirer": "^6.2.1",
+    "mkdirp": "^0.5.1"
+  }
+}
