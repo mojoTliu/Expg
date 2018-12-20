@@ -1,10 +1,12 @@
 {
   "name": "expg",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "author": "Mojo Liu",
   "email": "mojoliu@outlook.com",
   "description": "A Node.js server generation bootstrap",
+  "main": "bin/expg.js",
+  "preferGlobal": true,
   "bin": {
     "expg": "./bin/expg.js"
   },

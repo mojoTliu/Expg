@@ -89,7 +89,7 @@ async function createApplication(appName, dir) {
   Object.assign(answers, { appName });
 
   const templatePath = path.join(TEMPLATE_DIR);
-  copyDir(templatePath, '');
+  copyDir(templatePath, appName);
   generateFile(templatePath, answers);
 }
 
@@ -107,8 +107,8 @@ function copyDir(templatePath, parentPath) {
 
 function generateFile(templatePath, variables) {
   if (fs.statSync(templatePath).isFile()) {
-    const content = Handlebars.compile(new Buffer(fs.readFileSync(templatePath)).toString())(variables);
-    fs.writeFileSync(templatePath.replace(TEMPLATE_DIR, '.').replace('.hjs', ''), content);
+    const content = Handlebars.compile(Buffer.from(fs.readFileSync(templatePath), 'UTF-8').toString())(variables);
+    fs.writeFileSync(templatePath.replace(TEMPLATE_DIR, `./${variables.appName}`).replace('.hjs', ''), content);
   } else {
     const templates = fs.readdirSync(templatePath);
     templates.forEach((t) => {
